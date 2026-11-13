@@ -48,13 +48,18 @@
     display: flex; justify-content: space-between; align-items: center;
     gap: 1rem; padding: 1.25rem 0;
   }
-  .marque { font: 800 1.25rem/1 var(--display); letter-spacing: -0.01em; text-decoration: none; color: var(--encre); }
-  .marque span { color: var(--bleu); }
+  .marque { display: flex; align-items: center; gap: 0.6rem; font: 800 1.25rem/1 var(--display); letter-spacing: -0.01em; text-decoration: none; color: var(--encre); }
+  .marque img { width: 34px; height: 34px; border-radius: 8px; }
+  .marque em { font-style: normal; color: var(--bleu); }
   nav.liens { display: flex; gap: 1.25rem; font-weight: 600; }
   nav.liens a { text-decoration: none; }
   nav.liens a:hover { text-decoration: underline; }
 
-  .intro { padding: 1.5rem 0 2rem; max-width: 46rem; }
+  .intro { padding: 1.5rem 0 2rem; display: grid; grid-template-columns: 1fr minmax(260px, 420px); gap: 2rem; align-items: center; }
+  .intro .texte { max-width: 46rem; }
+  .intro figure { margin: -1.5rem 0 0; }
+  .intro figure img { width: 100%; height: auto; display: block; }
+  .intro figcaption { font-size: 0.85rem; color: var(--gris); text-align: center; margin-top: -0.5rem; }
   .intro h1 {
     font: 800 clamp(2rem, 4.6vw, 3.4rem)/1.04 var(--display);
     letter-spacing: -0.025em; margin: 0 0 1rem;
@@ -153,6 +158,8 @@
     .descente { border-right: 0; border-bottom: 1px solid var(--trait); }
     .carte-zone { grid-template-columns: 1fr; }
     .colonnes { grid-template-columns: 1fr; gap: 2rem; padding: 2.5rem 0; }
+    .intro { grid-template-columns: 1fr; }
+    .intro figure { margin: 0 auto; max-width: 320px; order: -1; }
     .resultat { padding: 1.5rem 1.25rem; }
   }
   @media (max-width: 560px) { nav.liens a.secondaire { display: none; } }
@@ -165,7 +172,7 @@
 <body>
 <div class="page">
   <header class="top">
-    <a class="marque" href="./">RDC <span>Localités</span></a>
+    <a class="marque" href="./"><img src="images/logo.png" alt="" width="34" height="34"><span>RDC <em>Localités</em></span></a>
     <nav class="liens" aria-label="Liens du projet">
       <a class="secondaire" href="#utiliser">Utiliser l'API</a>
       <a class="secondaire" href="https://github.com/243Comunity/rdc-localites/releases/latest">Télécharger</a>
@@ -174,8 +181,14 @@
   </header>
 
   <section class="intro">
-    <h1>Toute la RDC, de la province au village, dans vos applications.</h1>
-    <p>Le découpage administratif complet du pays, gratuit et ouvert. Choisissez un lieu ci-dessous : chaque étape est une simple requête à l'API.</p>
+    <div class="texte">
+      <h1>Toute la RDC, de la province au village, dans vos applications.</h1>
+      <p>Le découpage administratif complet du pays, gratuit et ouvert. Choisissez un lieu ci-dessous : chaque étape est une simple requête à l'API.</p>
+    </div>
+    <figure>
+      <img src="images/carte-rdc.png" width="800" height="800" alt="Carte de la RDC formée par les points GPS de plus de 100 000 villages et localités">
+      <figcaption>Chaque point est un village de la base.</figcaption>
+    </figure>
   </section>
 
   <section class="demo" aria-label="Démonstration">
