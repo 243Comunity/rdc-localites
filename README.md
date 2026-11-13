@@ -4,6 +4,8 @@
 
 Un projet de la communauté [243Comunity](https://243comunity.dev).
 
+**Essayer en ligne : https://243comunity.github.io/rdc-localites/**
+
 | Niveau | Nombre |
 |---|---:|
 | Provinces | 26 |
@@ -62,6 +64,7 @@ Python 3.10+ uniquement, sans aucune dépendance.
 data/        Les CSV de référence (la source de vérité, modifiable par pull request)
 scripts/     import_excel.py (import initial), validate.py, build.py
 docs/        Dictionnaire de données, rapport d'import
+site/        Page de démonstration publiée avec l'API
 dist/        Généré par build.py (non versionné)
 ```
 

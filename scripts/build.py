@@ -9,6 +9,7 @@ Sorties :
   dist/geojson/localites.geojson    points GPS des localités
   dist/rdc-localites.sqlite         base SQLite prête à l'emploi
   dist/api/v1/...                   API statique (fichiers JSON à servir tels quels)
+  dist/index.html                   page de démonstration (copiée depuis site/)
 
 Bibliothèque standard uniquement : aucun serveur, aucune dépendance.
 """
@@ -159,6 +160,13 @@ def build_api(db):
               "localites": loc_by_g.get(r["id"], [])})
 
 
+def build_site():
+    """Copie la page de démonstration (site/) à la racine de dist/."""
+    src = ROOT / "site"
+    if src.exists():
+        shutil.copytree(src, DIST, dirs_exist_ok=True)
+
+
 def main():
     db = load_all()
     DIST.mkdir(exist_ok=True)
@@ -166,6 +174,7 @@ def main():
     build_geojson(db)
     build_sqlite(db)
     build_api(db)
+    build_site()
     n_files = sum(1 for _ in DIST.rglob("*") if _.is_file())
     print(f"dist/ généré : {n_files} fichiers (version {VERSION}).")
 

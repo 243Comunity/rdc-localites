@@ -2,6 +2,7 @@
 
 ## Non publié
 
+- Page de démonstration : sélection en cascade province → village, carte des villages du groupement.
 - Fermes : position arrondie à ~1 km et précision GPS retirée (vie privée des propriétaires).
 - Licence des données : CC BY 4.0.
 - Contributions : pull requests obligatoires vers `main`, relecture par le mainteneur

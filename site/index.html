@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RDC Localités : le découpage administratif de la RDC en open data</title>
+<meta name="description" content="Provinces, territoires, secteurs, groupements et 74 000 villages de la RDC, gratuits et ouverts : API, JSON, CSV, SQLite, GeoJSON.">
+<meta name="theme-color" content="#0059b8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --fond: #eef3f7;
+    --papier: #ffffff;
+    --encre: #14213d;
+    --bleu: #0059b8;
+    --jaune: #f2c200;
+    --rouge: #c8102e;
+    --gris: #5f6f86;
+    --trait: #cdd8e3;
+    --display: "Bricolage Grotesque", "Segoe UI", sans-serif;
+    --texte: "Source Sans 3", "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--fond); color: var(--encre);
+    font: 400 1.0625rem/1.55 var(--texte);
+  }
+  a { color: var(--bleu); }
+  a:focus-visible, select:focus-visible, button:focus-visible {
+    outline: 3px solid var(--jaune); outline-offset: 2px;
+  }
+  .page { max-width: 1180px; margin: 0 auto; padding: 0 1.25rem; }
+
+  /* En-tête */
+  header.top {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 1rem; padding: 1.25rem 0;
+  }
+  .marque { font: 800 1.25rem/1 var(--display); letter-spacing: -0.01em; text-decoration: none; color: var(--encre); }
+  .marque span { color: var(--bleu); }
+  nav.liens { display: flex; gap: 1.25rem; font-weight: 600; }
+  nav.liens a { text-decoration: none; }
+  nav.liens a:hover { text-decoration: underline; }
+
+  .intro { padding: 1.5rem 0 2rem; max-width: 46rem; }
+  .intro h1 {
+    font: 800 clamp(2rem, 4.6vw, 3.4rem)/1.04 var(--display);
+    letter-spacing: -0.025em; margin: 0 0 1rem;
+  }
+  .intro p { margin: 0; color: var(--gris); font-size: 1.15rem; max-width: 38rem; }
+
+  /* Démo */
+  .demo {
+    display: grid; grid-template-columns: minmax(280px, 380px) 1fr;
+    background: var(--papier); border: 1px solid var(--trait);
+    border-radius: 14px; overflow: hidden;
+  }
+  .descente { padding: 1.75rem 1.5rem; border-right: 1px solid var(--trait); }
+  .descente h2 { font: 700 1.05rem/1.3 var(--display); margin: 0 0 1.25rem; }
+  ol.niveaux { list-style: none; margin: 0; padding: 0; position: relative; }
+  ol.niveaux li { position: relative; padding: 0 0 1.1rem 2rem; }
+  ol.niveaux li::before {
+    content: ""; position: absolute; left: 7px; top: 1.9rem; bottom: -0.2rem;
+    width: 2px; background: var(--trait);
+  }
+  ol.niveaux li:last-child::before { display: none; }
+  ol.niveaux li::after {
+    content: ""; position: absolute; left: 0; top: 1.95rem;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--papier); border: 2px solid var(--trait);
+  }
+  ol.niveaux li.choisi::before { background: var(--bleu); }
+  ol.niveaux li.choisi::after { background: var(--jaune); border-color: var(--bleu); }
+  label { display: block; font-weight: 600; font-size: 0.95rem; margin-bottom: 0.3rem; }
+  label small { font-weight: 400; color: var(--gris); }
+  select {
+    width: 100%; font: inherit; font-size: 1rem; color: var(--encre);
+    padding: 0.6rem 2.2rem 0.6rem 0.75rem; border: 1px solid var(--trait); border-radius: 8px;
+    background: var(--fond) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%2314213d' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 0.8rem center;
+    appearance: none; -webkit-appearance: none;
+  }
+  select:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .resultat { padding: 1.75rem 2rem 2rem; display: flex; flex-direction: column; gap: 1.5rem; min-width: 0; }
+  .adresse {
+    font: 800 clamp(1.6rem, 3.4vw, 2.6rem)/1.08 var(--display);
+    letter-spacing: -0.02em; margin: 0; min-height: 2.2em;
+  }
+  .adresse .part { display: block; }
+  .adresse .part:not(:last-child) { color: var(--gris); font-weight: 500; font-size: 0.55em; line-height: 1.35; }
+  .adresse.vide { color: var(--gris); font-weight: 500; font-size: 1.25rem; }
+
+  .carte-zone { display: grid; grid-template-columns: 1fr minmax(200px, 260px); gap: 1.5rem; align-items: start; }
+  .carte {
+    position: relative; background: #e3ebf2; border-radius: 10px; aspect-ratio: 4 / 3;
+    overflow: hidden;
+  }
+  .carte svg { width: 100%; height: 100%; display: block; }
+  .carte .note {
+    position: absolute; inset: 0; display: grid; place-items: center; text-align: center;
+    padding: 1.5rem; color: var(--gris); font-size: 0.95rem;
+  }
+  .carte circle { fill: var(--bleu); opacity: 0.55; }
+  .carte circle.loc { fill: var(--gris); opacity: 0.45; }
+  .carte circle.sel { fill: var(--jaune); stroke: var(--encre); stroke-width: 2; opacity: 1; }
+  .legende { font-size: 0.85rem; color: var(--gris); margin-top: 0.5rem; }
+  .legende i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin: 0 0.3rem 0 0.8rem; vertical-align: 0; }
+  .legende i:first-child { margin-left: 0; }
+
+  dl.fiche { margin: 0; display: grid; gap: 0.7rem; font-size: 0.95rem; }
+  dl.fiche div { border-bottom: 1px solid var(--trait); padding-bottom: 0.6rem; }
+  dl.fiche dt { color: var(--gris); font-size: 0.85rem; }
+  dl.fiche dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
+
+  .requete { background: var(--encre); color: #e8eef6; border-radius: 10px; padding: 1rem 1.1rem; }
+  .requete p { margin: 0 0 0.4rem; font-size: 0.85rem; color: #a9b8cc; }
+  .requete code { font: 0.9rem/1.5 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; overflow-wrap: anywhere; }
+  .requete a { color: var(--jaune); }
+
+  /* Sections */
+  .chiffres {
+    display: flex; flex-wrap: wrap; gap: 0.5rem 2.25rem; margin: 2.5rem 0 0; padding: 0;
+    list-style: none; color: var(--gris);
+  }
+  .chiffres b { color: var(--encre); font: 700 1.25rem var(--display); margin-right: 0.3rem; }
+
+  .colonnes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; padding: 3.5rem 0; }
+  .colonnes > div { min-width: 0; }
+  .colonnes h2 { font: 700 1.35rem/1.2 var(--display); margin: 0 0 0.6rem; letter-spacing: -0.01em; }
+  .colonnes p { margin: 0 0 0.8rem; max-width: 34rem; }
+  .colonnes ul { margin: 0; padding-left: 1.1rem; }
+  pre.code {
+    background: var(--papier); border: 1px solid var(--trait); border-radius: 8px;
+    padding: 0.9rem 1rem; overflow-x: auto; margin: 0.4rem 0 0;
+    font: 0.85rem/1.55 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  }
+  footer { border-top: 1px solid var(--trait); padding: 1.5rem 0 2.5rem; color: var(--gris); font-size: 0.95rem; }
+
+  @media (max-width: 900px) {
+    .demo { grid-template-columns: 1fr; }
+    .descente { border-right: 0; border-bottom: 1px solid var(--trait); }
+    .carte-zone { grid-template-columns: 1fr; }
+    .colonnes { grid-template-columns: 1fr; gap: 2rem; padding: 2.5rem 0; }
+    .resultat { padding: 1.5rem 1.25rem; }
+  }
+  @media (max-width: 560px) { nav.liens a.secondaire { display: none; } }
+  @media (prefers-reduced-motion: no-preference) {
+    .adresse .part:last-child { animation: arrive 0.35s ease-out; }
+    @keyframes arrive { from { opacity: 0; transform: translateY(6px); } }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="top">
+    <a class="marque" href="./">RDC <span>Localités</span></a>
+    <nav class="liens" aria-label="Liens du projet">
+      <a class="secondaire" href="#utiliser">Utiliser l'API</a>
+      <a class="secondaire" href="https://github.com/243Comunity/rdc-localites/releases/latest">Télécharger</a>
+      <a href="https://github.com/243Comunity/rdc-localites">GitHub</a>
+    </nav>
+  </header>
+
+  <section class="intro">
+    <h1>Toute la RDC, de la province au village, dans vos applications.</h1>
+    <p>Le découpage administratif complet du pays, gratuit et ouvert. Choisissez un lieu ci-dessous : chaque étape est une simple requête à l'API.</p>
+  </section>
+
+  <section class="demo" aria-label="Démonstration">
+    <div class="descente">
+      <h2>Choisir un lieu</h2>
+      <ol class="niveaux">
+        <li><label for="n0">Province</label><select id="n0"><option>Chargement…</option></select></li>
+        <li><label for="n1">Territoire ou ville</label><select id="n1" disabled></select></li>
+        <li><label for="n2">Secteur, chefferie ou commune</label><select id="n2" disabled></select></li>
+        <li><label for="n3">Groupement ou quartier</label><select id="n3" disabled></select></li>
+        <li><label for="n4">Village ou localité <small id="n4-compte"></small></label><select id="n4" disabled></select></li>
+      </ol>
+    </div>
+
+    <div class="resultat" aria-live="polite">
+      <p class="adresse vide" id="adresse">Commencez par une province.</p>
+
+      <div class="carte-zone">
+        <div>
+          <div class="carte" id="carte"><div class="note">Choisissez un groupement pour voir ses villages sur la carte.</div></div>
+          <div class="legende" id="legende" hidden><i style="background:var(--bleu)"></i>Village codé<i style="background:var(--gris)"></i>Autre localité<i style="background:var(--jaune);outline:2px solid var(--encre)"></i>Sélection</div>
+        </div>
+        <dl class="fiche" id="fiche"></dl>
+      </div>
+
+      <div class="requete">
+        <p>Dernière requête envoyée à l'API</p>
+        <code id="requete">GET api/v1/provinces.json</code>
+      </div>
+    </div>
+  </section>
+
+  <ul class="chiffres" id="chiffres" aria-label="Contenu de la base"></ul>
+
+  <section class="colonnes">
+    <div id="utiliser">
+      <h2>Utiliser l'API</h2>
+      <p>Pas de clé, pas de compte, pas de limite. Des fichiers JSON servis tels quels.</p>
+      <pre class="code">GET /api/v1/provinces.json
+GET /api/v1/provinces/{id}.json
+GET /api/v1/territoires-villes/{id}.json
+GET /api/v1/communes-secteurs-chefferies/{id}.json
+GET /api/v1/groupements-quartiers/{id}.json</pre>
+    </div>
+    <div>
+      <h2>Travailler hors ligne</h2>
+      <p>La connexion coûte cher ? Embarquez toute la base dans votre application.</p>
+      <ul>
+        <li><a href="https://github.com/243Comunity/rdc-localites/releases/latest">Base SQLite</a> (10 Mo), prête pour le mobile</li>
+        <li>JSON, CSV et GeoJSON pour QGIS ou Leaflet</li>
+      </ul>
+    </div>
+    <div>
+      <h2>Compléter la carte</h2>
+      <p>Un village manque, un nom est mal écrit ? Signalez-le, même sans savoir coder.</p>
+      <ul>
+        <li><a href="https://github.com/243Comunity/rdc-localites/issues/new/choose">Signaler une correction</a></li>
+        <li><a href="https://github.com/243Comunity/rdc-localites/blob/main/CONTRIBUTING.md">Proposer une modification</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    Un projet de <a href="https://243comunity.dev">243Comunity</a>. Code sous licence MIT, données sous licence CC BY 4.0.
+    <span id="version"></span>
+  </footer>
+</div>
+
+<script>
+(() => {
+  const API = "api/v1/";
+  const cache = new Map();
+  const $ = (id) => document.getElementById(id);
+  const sels = [0, 1, 2, 3, 4].map((i) => $("n" + i));
+  const chemin = [null, null, null, null, null];
+
+  const TYPES = { territoire: "Territoire", ville: "Ville", commune: "Commune", secteur: "Secteur",
+    chefferie: "Chefferie", groupement: "Groupement", quartier: "Quartier", non_determine: "Non déterminé",
+    village: "Village", hameau: "Hameau", ferme: "Ferme", autre: "Autre" };
+
+  // Les noms officiels sont en majuscules : on les affiche en casse de phrase.
+  const joli = (s) => (s || "").toLowerCase().replace(/(^|[\s\-'(])(\p{L})/gu, (m, a, b) => a + b.toUpperCase());
+
+  async function get(path) {
+    $("requete").textContent = "GET " + API + path;
+    if (cache.has(path)) return cache.get(path);
+    const p = fetch(API + path).then((r) => {
+      if (!r.ok) throw new Error("La requête " + path + " a échoué (" + r.status + ").");
+      return r.json();
+    });
+    cache.set(path, p);
+    return p;
+  }
+
+  function remplir(sel, items, invite) {
+    sel.innerHTML = "";
+    const o = new Option(invite, "");
+    sel.add(o);
+    items.forEach((it) => sel.add(new Option(it.label, it.value)));
+    sel.disabled = items.length === 0;
+  }
+
+  function vider(depuis) {
+    for (let i = depuis; i < 5; i++) {
+      sels[i].innerHTML = ""; sels[i].disabled = true; chemin[i] = null;
+    }
+    if (depuis <= 4) $("n4-compte").textContent = "";
+    if (depuis <= 3) carte(null);
+  }
+
+  function marquer() {
+    sels.forEach((s, i) => s.closest("li").classList.toggle("choisi", !!chemin[i]));
+    const parts = chemin.filter(Boolean).map((c) => c.nom);
+    const a = $("adresse");
+    if (!parts.length) { a.className = "adresse vide"; a.textContent = "Commencez par une province."; }
+    else {
+      a.className = "adresse";
+      a.innerHTML = "";
+      parts.forEach((p) => { const s = document.createElement("span"); s.className = "part"; s.textContent = joli(p); a.appendChild(s); });
+    }
+    fiche();
+  }
+
+  function fiche() {
+    const dernier = [...chemin].reverse().find(Boolean);
+    const f = $("fiche");
+    f.innerHTML = "";
+    if (!dernier) return;
+    const lignes = [["Identifiant", dernier.id], ["Type", TYPES[dernier.type || dernier.categorie] || "Province"]];
+    if (dernier.latitude != null) {
+      const lat = dernier.latitude, lon = dernier.longitude;
+      lignes.push(["Coordonnées", `${lat.toFixed(5)}, ${lon.toFixed(5)}`]);
+      if (dernier.altitude != null) lignes.push(["Altitude", Math.round(dernier.altitude) + " m"]);
+      lignes.push(["Voir sur une carte", `<a href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=14/${lat}/${lon}" target="_blank" rel="noopener">OpenStreetMap</a>`]);
+    }
+    lignes.forEach(([k, v]) => {
+      const d = document.createElement("div");
+      d.innerHTML = `<dt>${k}</dt><dd></dd>`;
+      if (String(v).startsWith("<a ")) d.querySelector("dd").innerHTML = v; else d.querySelector("dd").textContent = v;
+      f.appendChild(d);
+    });
+  }
+
+  let pointsGroupement = [];
+  function carte(points, selId) {
+    const zone = $("carte");
+    if (points) pointsGroupement = points;
+    const pts = (points || (selId !== undefined ? pointsGroupement : [])).filter((p) => p.latitude != null);
+    $("legende").hidden = !pts.length;
+    if (!pts.length) {
+      zone.innerHTML = `<div class="note">${points ? "Pas de coordonnées GPS pour ce groupement." : "Choisissez un groupement pour voir ses villages sur la carte."}</div>`;
+      return;
+    }
+    const W = 400, H = 300, M = 24;
+    const lats = pts.map((p) => p.latitude), lons = pts.map((p) => p.longitude);
+    const k = Math.cos((Math.min(...lats) + Math.max(...lats)) / 2 * Math.PI / 180);
+    let x0 = Math.min(...lons) * k, x1 = Math.max(...lons) * k, y0 = Math.min(...lats), y1 = Math.max(...lats);
+    const span = Math.max(x1 - x0, (y1 - y0) * W / H, 0.01);
+    const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+    const s = (W - 2 * M) / span;
+    const X = (lon) => W / 2 + (lon * k - cx) * s;
+    const Y = (lat) => H / 2 - (lat - cy) * s;
+    let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Carte des ${pts.length} lieux du groupement">`;
+    const sel = pts.find((p) => p.id == selId);
+    pts.forEach((p) => { if (p !== sel) svg += `<circle cx="${X(p.longitude).toFixed(1)}" cy="${Y(p.latitude).toFixed(1)}" r="4" class="${typeof p.id === "string" ? "loc" : ""}"><title>${joli(p.nom)}</title></circle>`; });
+    if (sel) svg += `<circle cx="${X(sel.longitude).toFixed(1)}" cy="${Y(sel.latitude).toFixed(1)}" r="8" class="sel"><title>${joli(sel.nom)}</title></circle>`;
+    zone.innerHTML = svg + "</svg>";
+  }
+
+  function erreur(e) {
+    const a = $("adresse");
+    a.className = "adresse vide";
+    a.textContent = e.message + " Vérifiez votre connexion puis choisissez à nouveau.";
+  }
+
+  const opt = (arr) => arr.map((x) => ({ value: x.id, label: joli(x.nom) + (x.type && x.type !== "territoire" && x.type !== "groupement" ? " (" + TYPES[x.type].toLowerCase() + ")" : "") }))
+    .sort((a, b) => a.label.localeCompare(b.label, "fr"));
+
+  sels[0].addEventListener("change", async () => {
+    vider(1);
+    const id = sels[0].value;
+    if (!id) { chemin[0] = null; return marquer(); }
+    try {
+      const p = await get(`provinces/${id}.json`);
+      chemin[0] = p; marquer();
+      remplir(sels[1], opt(p.territoires_villes), "Choisir un territoire ou une ville");
+    } catch (e) { erreur(e); }
+  });
+  sels[1].addEventListener("change", async () => {
+    vider(2);
+    const id = sels[1].value;
+    if (!id) { chemin[1] = null; return marquer(); }
+    try {
+      const t = await get(`territoires-villes/${id}.json`);
+      chemin[1] = t; marquer();
+      remplir(sels[2], opt(t.communes_secteurs_chefferies), "Choisir un secteur, une chefferie ou une commune");
+    } catch (e) { erreur(e); }
+  });
+  sels[2].addEventListener("change", async () => {
+    vider(3);
+    const id = sels[2].value;
+    if (!id) { chemin[2] = null; return marquer(); }
+    try {
+      const c = await get(`communes-secteurs-chefferies/${id}.json`);
+      chemin[2] = c; marquer();
+      remplir(sels[3], opt(c.groupements_quartiers), "Choisir un groupement ou un quartier");
+    } catch (e) { erreur(e); }
+  });
+  let lieux = [];
+  sels[3].addEventListener("change", async () => {
+    vider(4);
+    const id = sels[3].value;
+    if (!id) { chemin[3] = null; return marquer(); }
+    try {
+      const g = await get(`groupements-quartiers/${id}.json`);
+      chemin[3] = g; marquer();
+      lieux = [...g.villages.map((v) => ({ ...v, type: "village" })), ...g.localites];
+      const items = lieux.map((l) => ({ value: l.id, label: joli(l.nom) + (l.categorie && l.categorie !== "village" ? " (" + TYPES[l.categorie].toLowerCase() + ")" : "") }))
+        .sort((a, b) => a.label.localeCompare(b.label, "fr"));
+      remplir(sels[4], items, lieux.length ? "Choisir un village ou une localité" : "Aucun lieu enregistré");
+      $("n4-compte").textContent = lieux.length ? `(${lieux.length.toLocaleString("fr-FR")})` : "";
+      carte(lieux);
+    } catch (e) { erreur(e); }
+  });
+  sels[4].addEventListener("change", () => {
+    const id = sels[4].value;
+    chemin[4] = lieux.find((l) => String(l.id) === id) || null;
+    marquer();
+    carte(null, chemin[4] ? chemin[4].id : null);
+  });
+
+  (async () => {
+    try {
+      const [index, provinces] = await Promise.all([get("index.json"), get("provinces.json")]);
+      $("requete").textContent = "GET " + API + "provinces.json";
+      remplir(sels[0], opt(provinces), "Choisir une province");
+      const e = index.effectifs, n = (v) => v.toLocaleString("fr-FR");
+      $("chiffres").innerHTML =
+        `<li><b>${n(e.provinces)}</b>provinces</li><li><b>${n(e.territoires_villes)}</b>territoires et villes</li>` +
+        `<li><b>${n(e.communes_secteurs_chefferies)}</b>secteurs, chefferies et communes</li>` +
+        `<li><b>${n(e.groupements_quartiers)}</b>groupements et quartiers</li>` +
+        `<li><b>${n(e.villages)}</b>villages codés</li><li><b>${n(e.localites)}</b>autres localités</li>`;
+      $("version").textContent = "Version " + index.version + ".";
+    } catch (err) {
+      sels[0].innerHTML = "<option>Indisponible</option>";
+      erreur(err);
+    }
+  })();
+})();
+</script>
+</body>
+</html>
