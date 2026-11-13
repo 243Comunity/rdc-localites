@@ -1,0 +1,27 @@
+name: Correction de données
+description: Signaler un village manquant, un nom mal écrit, un point GPS faux…
+labels: [donnees]
+body:
+  - type: dropdown
+    id: genre
+    attributes:
+      label: Type de correction
+      options: [Nom mal écrit, Entité manquante, Mauvais rattachement, Coordonnées GPS fausses, Entité qui n'existe plus, Autre]
+    validations: { required: true }
+  - type: input
+    id: entite
+    attributes:
+      label: Entité concernée
+      description: Nom et identifiant si possible, avec le chemin (province / territoire / secteur / groupement)
+    validations: { required: true }
+  - type: textarea
+    id: correction
+    attributes:
+      label: Ce qui est faux et la bonne valeur
+    validations: { required: true }
+  - type: textarea
+    id: source
+    attributes:
+      label: Comment le savez-vous ?
+      description: Vous êtes sur place, document officiel, carte… Ne mettez aucune donnée personnelle.
+    validations: { required: true }

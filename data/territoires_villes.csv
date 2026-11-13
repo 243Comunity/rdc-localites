@@ -1,0 +1,180 @@
+id,nom,type,province_id
+1000,KINSHASA VILLE,ville,1
+2011,MATADI VILLE,ville,2
+2012,BOMA VILLE,ville,2
+2024,MOANDA,territoire,2
+2031,TSHELA,territoire,2
+2032,SEKE-BANZA,territoire,2
+2033,LUKULA,territoire,2
+2041,MBANZA-NGUNGU,territoire,2
+2042,SONGOLOLO,territoire,2
+2043,LUOZI,territoire,2
+2051,MADIMBA,territoire,2
+2052,KASANGULU,territoire,2
+2053,KIMVULA,territoire,2
+3011,BANDUNDU VILLE,ville,4
+3012,KIKWIT VILLE,ville,4
+3021,INONGO,territoire,5
+3022,KIRI,territoire,5
+3023,OSHWE,territoire,5
+3024,KUTU,territoire,5
+3025,MUSHIE,territoire,5
+3026,BOLOBO,territoire,5
+3027,KWAMOUTH,territoire,5
+3028,YUMBI,territoire,5
+3031,BULUNGU,territoire,4
+3032,MASI-MANIMBA,territoire,4
+3033,BAGATA,territoire,4
+3034,IDIOFA,territoire,4
+3035,GUNGU,territoire,4
+3039,INONGO VILLE,ville,5
+3042,KENGE VILLE,ville,3
+3051,KENGE,territoire,3
+3052,FESHI,territoire,3
+3053,KAHEMBA,territoire,3
+3054,KASONGO-LUNDA,territoire,3
+3055,POPOKABAKA,territoire,3
+4011,MBANDAKA VILLE,ville,6
+4012,GBADOLITE VILLE,ville,7
+4013,ZONGO VILLE,ville,8
+4016,GEMENA VILLE,ville,8
+4017,LISALA VILLE,ville,9
+4019,BOENDE VILLE,ville,10
+4021,BASANKUSU,territoire,6
+4022,BOLOMBA,territoire,6
+4023,INGENDE,territoire,6
+4024,BIKORO,territoire,6
+4025,LUKOLELA,territoire,6
+4026,MANKANZA,territoire,6
+4027,BOMONGO,territoire,6
+4031,GEMENA,territoire,8
+4032,BUDJALA,territoire,8
+4033,KUNGU,territoire,8
+4034,LIBENGE,territoire,8
+4051,MOBAYI-MBONGO,territoire,7
+4052,YAKOMA,territoire,7
+4053,BUSINGA,territoire,7
+4054,BOSOBOLO,territoire,7
+4061,LISALA,territoire,9
+4062,BUMBA,territoire,9
+4063,BONGANDANGA,territoire,9
+4071,BOENDE,territoire,10
+4072,BEFALE,territoire,10
+4073,DJOLU,territoire,10
+4074,IKELA,territoire,10
+4075,BOKUNGU,territoire,10
+4076,MONKOTO,territoire,10
+5011,KISANGANI VILLE,ville,11
+5021,BANALIA,territoire,11
+5022,BAFWASENDE,territoire,11
+5023,UBUNDU,territoire,11
+5024,OPALA,territoire,11
+5025,ISANGI,territoire,11
+5026,YAHUMA,territoire,11
+5027,BASOKO,territoire,11
+5031,BUTA,territoire,12
+5032,AKETI,territoire,12
+5033,BONDO,territoire,12
+5034,ANGO,territoire,12
+5035,BAMBESA,territoire,12
+5036,POKO,territoire,12
+5040,BUNIA VILLE,ville,14
+5041,RUNGU,territoire,13
+5042,NIANGARA,territoire,13
+5043,DUNGU,territoire,13
+5044,FARADJE,territoire,13
+5045,WATSA,territoire,13
+5046,WAMBA,territoire,13
+5047,BUTA VILLE,ville,12
+5051,IRUMU,territoire,14
+5052,MAMBASA,territoire,14
+5053,DJUGU,territoire,14
+5054,MAHAGI,territoire,14
+5055,ARU,territoire,14
+5057,ISIRO VILLE,ville,13
+6131,GOMA VILLE,ville,15
+6132,WALIKALE,territoire,15
+6133,LUBERO,territoire,15
+6134,BENI,territoire,15
+6135,RUTSHURU,territoire,15
+6136,MASISI,territoire,15
+6137,NYIRAGONGO,territoire,15
+6138,BENI VILLE,ville,15
+6139,BUTEMBO VILLE,ville,15
+6241,WALUNGU,territoire,16
+6242,UVIRA,territoire,16
+6243,FIZI,territoire,16
+6244,MWENGA,territoire,16
+6245,SHABUNDA,territoire,16
+6246,KALEHE,territoire,16
+6247,IDJWI,territoire,16
+6248,KABARE,territoire,16
+6249,BUKAVU VILLE,ville,16
+6311,KINDU VILLE,ville,17
+6321,KAILO,territoire,17
+6322,KIBOMBO,territoire,17
+6323,PUNIA,territoire,17
+6324,LUBUTU,territoire,17
+6325,PANGI,territoire,17
+6326,KASONGO,territoire,17
+6327,KABAMBARE,territoire,17
+7011,LUBUMBASHI VILLE,ville,18
+7012,LIKASI VILLE,ville,18
+7021,KOLWEZI VILLE,ville,20
+7026,KALEMIE VILLE,ville,21
+7027,KAMINA VILLE,ville,19
+7033,MUTSHATSHA,territoire,20
+7034,LUBUDI,territoire,20
+7041,DILOLO,territoire,20
+7042,SANDOA,territoire,20
+7043,KAPANGA,territoire,20
+7051,KAMINA,territoire,19
+7052,KANIAMA,territoire,19
+7053,KABONGO,territoire,19
+7054,MALEMBA-NKULU,territoire,19
+7055,BUKAMA,territoire,19
+7061,KALEMIE,territoire,21
+7062,MOBA,territoire,21
+7063,MANONO,territoire,21
+7064,KABALO,territoire,21
+7065,KONGOLO,territoire,21
+7066,NYUNZU,territoire,21
+7071,KIPUSHI,territoire,18
+7072,SAKANIA,territoire,18
+7073,KASENGA,territoire,18
+7074,MITWABA,territoire,18
+7075,PWETO,territoire,18
+7076,KAMBOVE,territoire,18
+8011,MBUJI-MAYI VILLE,ville,24
+8020,KABINDA VILLE,ville,22
+8021,MIABI,territoire,24
+8022,KABEYA-KAMWANGA,territoire,24
+8023,LUPATAPATA,territoire,24
+8024,KATANDA,territoire,24
+8025,TSHILENGE,territoire,24
+8029,LUSAMBO VILLE,ville,23
+8030,LUMUMBA VILLE,ville,23
+8031,LUSAMBO,territoire,23
+8032,KOLE,territoire,23
+8033,LOMELA,territoire,23
+8034,KATAKO-KOMBE,territoire,23
+8035,LUBEFU,territoire,23
+8036,LODJA,territoire,23
+8041,LUILU (MWENE-DITU),territoire,22
+8042,KAMIJI,territoire,22
+8043,NGANDAJIKA,territoire,22
+8044,KABINDA,territoire,22
+8045,MWENE-DITU VILLE,ville,22
+8046,LUBAO,territoire,22
+9011,KANANGA VILLE,ville,26
+9021,DIBAYA,territoire,26
+9022,LUIZA,territoire,26
+9023,KAZUMBA,territoire,26
+9024,DEMBA,territoire,26
+9025,DIMBELENGE,territoire,26
+9031,LUEBO,territoire,25
+9032,TSHIKAPA,territoire,25
+9033,ILEBO,territoire,25
+9034,MWEKA,territoire,25
+9035,DEKESE,territoire,25
+9036,TSHIKAPA VILLE,ville,25
