@@ -1,5 +1,7 @@
 # RDC Localités
 
+![RDC Localités : chaque point est un village](site/images/cover.png)
+
 **Le découpage administratif complet de la République Démocratique du Congo, ouvert et gratuit, prêt à intégrer dans vos applications.**
 
 Un projet de la communauté [243Comunity](https://243comunity.dev).
