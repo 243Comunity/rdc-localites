@@ -14,9 +14,12 @@ Généré par `scripts/import_excel.py`.
 | noms de village en double dans un meme groupement | 10 |
 | villages sans groupement | 0 |
 | localites rattachees a un village code | 11 334 |
+| noms corriges encodage | 14 |
+| noms a verifier lettre perdue | 16 |
+| fiches marquees erronees supprimees | 1 |
 | lignes provinces.csv | 26 |
 | lignes territoires villes.csv | 179 |
 | lignes communes secteurs chefferies.csv | 1 044 |
 | lignes groupements quartiers.csv | 8 053 |
 | lignes villages.csv | 74 395 |
-| lignes localites.csv | 33 480 |
+| lignes localites.csv | 33 479 |

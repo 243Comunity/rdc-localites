@@ -85,7 +85,7 @@ Détail de toutes les colonnes : [docs/DICTIONNAIRE.md](docs/DICTIONNAIRE.md).
 
 ## Contribuer
 
-Un village manque, un nom est mal écrit, un point GPS est faux ? Voir [CONTRIBUTING.md](CONTRIBUTING.md). Pas besoin d'être développeur : un ticket suffit.
+Un village manque, un nom est mal écrit, un point GPS est faux ? Voir [CONTRIBUTING.md](CONTRIBUTING.md). Pour commencer : [16 noms à vérifier sur le terrain](docs/A_VERIFIER.md). Pas besoin d'être développeur : un ticket suffit.
 
 ## Feuille de route
 

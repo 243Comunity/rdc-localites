@@ -32,12 +32,64 @@ TYPE_GQ = {"G": "groupement", "Q": "quartier", "C": "non_determine"}
 
 ALT_MIN, ALT_MAX = 0, 5200  # le point culminant de la RDC est ~5 109 m
 
+MOIS = ["JANVIER", "FÉVRIER", "MARS", "AVRIL", "MAI", "JUIN", "JUILLET",
+        "AOÛT", "SEPTEMBRE", "OCTOBRE", "NOVEMBRE", "DÉCEMBRE"]
+
+# Noms abîmés dans la source par des erreurs d'encodage (« OÃ¿CHA »). Corrections relues
+# une par une. « probable » = lettre déduite du contexte, à confirmer sur le terrain.
+CORRECTIONS = {
+    ("communes_secteurs_chefferies", 613411): "OÏCHA",
+    ("communes_secteurs_chefferies", 803407): "BATETELA ARABISÉS-LOMAMI",
+    ("villages", 2003067): "EMMAÜS",
+    ("villages", 2019946): "KIKUPÎKA MAKABA I",
+    ("villages", 2023218): "ÎLE LIMBILA",
+    ("villages", 2025869): "PANDU COTON ZAÏRE",
+    ("villages", 2025978): "MONO MAÏGO",            # probable
+    ("villages", 2094797): "VILLAGE DE NGBOL'UWA",
+    ("villages", 2060581): "TANGA / 6° ESCAL",
+    ("villages", 2053285): "KYUBO KABANGO / KYUBO MAMBA",
+    ("villages", 2079349): "YENGALA PLANTATION",
+    ("villages", 2012766): "POSTE KIPWANGA",        # probable
+    ("villages", 2026791): "MBWA PONT",             # probable
+    ("villages", 2062191): "KALUNGU",
+}
+
+# Une lettre a été perdue dans la source et ne peut pas être devinée : on retire le
+# caractère abîmé et on liste l'entité dans docs/A_VERIFIER.md.
+A_VERIFIER = {
+    ("groupements_quartiers", 1006901): "V KOJAMWENE",
+    ("villages", 2008734): "KAZMBA",
+    ("villages", 2035412): "TSHIAMNDU",
+    ("villages", 2038764): "KABA",
+    ("villages", 2046075): "BENA KAPTA KAFIKA",
+    ("villages", 2046791): "KIALU SANT",
+    ("villages", 2047668): "MB LUMBA",
+    ("villages", 2047669): "KIAMBE MB",
+    ("villages", 2075540): "NGANG",
+    ("villages", 2075549): "DJA",
+    ("villages", 2075565): "GO",
+    ("villages", 2080735): "LAMBA",
+    ("villages", 2080744): "MIBLA",
+    ("villages", 2080831): "ELMBE II",
+    ("villages", 2081421): "BUZIND",
+    ("villages", 2094872): "BNA KASUAYA",
+}
+
+# Fiches que les agents ont eux-mêmes marquées comme erronées.
+SUPPRIMER_SI_NOM_CONTIENT = ["FORMULAIRE A SUPPRIMER"]
+
 
 def clean_name(value) -> str | None:
     if value is None or (isinstance(value, float) and pd.isna(value)):
         return None
     s = str(value)
+    # Excel a transformé des noms comme « 30 JUIN » en dates (2024-06-30 00:00:00)
+    m = re.fullmatch(r"\d{4}-(\d\d)-(\d\d)( 00:00:00)?", s.strip())
+    if m:
+        s = f"{int(m.group(2))} {MOIS[int(m.group(1)) - 1]}"
     s = s.replace('"', "'")  # N"JILI -> N'JILI : l'apostrophe a été remplacée par un guillemet
+    s = s.replace("\u2019", "'").replace("\u2018", "'")  # apostrophes typographiques
+    s = s.replace("_", " ")  # BOMA_VILLE -> BOMA VILLE
     s = re.sub(r"\s+", " ", s).strip()
     return s or None
 
@@ -179,6 +231,27 @@ def main(xlsx: str) -> None:
     report["villages_sans_groupement"] = int(villages["groupement_quartier_id"].isna().sum())
     report["localites_rattachees_a_un_village_code"] = int(localites["village_rattachement_id"].notna().sum())
 
+    # ---------- Corrections de noms ----------
+    frames = {"communes_secteurs_chefferies": csc, "groupements_quartiers": gq,
+              "villages": villages, "localites": localites}
+    raw_names = {}
+    for (table, ident), nom in {**CORRECTIONS, **A_VERIFIER}.items():
+        t = frames[table]
+        hit = t["id"] == ident
+        if hit.sum() != 1:
+            raise SystemExit(f"Correction introuvable : {table} {ident}")
+        raw_names[(table, ident)] = t.loc[hit, "nom"].iloc[0]
+        t.loc[hit, "nom"] = nom
+    # Le nom du village de rattachement des localités suit la correction du village
+    fix_village = {raw_names[k]: v for k, v in {**CORRECTIONS, **A_VERIFIER}.items() if k[0] == "villages"}
+    localites["village_rattachement_nom"] = localites["village_rattachement_nom"].replace(fix_village)
+    report["noms_corriges_encodage"] = len(CORRECTIONS)
+    report["noms_a_verifier_lettre_perdue"] = len(A_VERIFIER)
+
+    drop = localites["nom"].str.upper().str.contains("|".join(SUPPRIMER_SI_NOM_CONTIENT), regex=True)
+    report["fiches_marquees_erronees_supprimees"] = int(drop.sum())
+    localites = localites[~drop]
+
     DATA.mkdir(exist_ok=True)
     tables = {
         "provinces.csv": provinces[["id", "nom"]],
@@ -193,6 +266,25 @@ def main(xlsx: str) -> None:
         report[f"lignes_{name}"] = len(t)
 
     DOCS.mkdir(exist_ok=True)
+    with open(DOCS / "A_VERIFIER.md", "w", encoding="utf-8") as f:
+        f.write("# Noms à vérifier sur le terrain\n\n"
+                "Dans le fichier source, une lettre de ces noms a été abîmée par une erreur d'encodage "
+                "et ne peut pas être retrouvée. Le caractère abîmé a été retiré. Si vous connaissez "
+                "le bon nom, ouvrez un ticket « Correction de données ».\n\n"
+                "| Fichier | Identifiant | Nom publié | Valeur brute dans la source | Lieu |\n|---|---|---|---|---|\n")
+        names = {t: frames[t].set_index("id") for t in frames}
+        for (table, ident), nom in A_VERIFIER.items():
+            row = names[table].loc[ident]
+            c_id = ident if table == "communes_secteurs_chefferies" else row["commune_secteur_chefferie_id"]
+            c = csc.set_index("id").loc[c_id]
+            t_ = tv.set_index("id").loc[c["territoire_ville_id"]]
+            p_ = provinces.set_index("id").loc[t_["province_id"]]
+            lieu = f"{p_['nom']} / {t_['nom']} / {c['nom']}"
+            raw = raw_names[(table, ident)].replace("|", "\\|")
+            f.write(f"| {table}.csv | {ident} | {nom} | `{raw}` | {lieu} |\n")
+        f.write("\nCorrigés avec une lettre **probable** (à confirmer) : "
+                + ", ".join(f"{v} ({k[1]})" for k, v in CORRECTIONS.items()
+                            if k[1] in (2025978, 2012766, 2026791)) + ".\n")
     with open(DOCS / "rapport_import.md", "w", encoding="utf-8") as f:
         f.write("# Rapport d'import\n\nGénéré par `scripts/import_excel.py`.\n\n| Indicateur | Valeur |\n|---|---:|\n")
         for k, v in report.items():

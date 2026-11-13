@@ -2,6 +2,14 @@
 
 ## Non publié
 
+## 0.1.1 — 2026-11-13
+
+- Encodage : 14 noms abîmés corrigés (OÏCHA, BATETELA ARABISÉS-LOMAMI, EMMAÜS, ZAÏRE…).
+  16 noms dont une lettre est perdue sont listés dans `docs/A_VERIFIER.md`.
+- Dates créées par Excel remplacées par le vrai nom du quartier (30 JUIN, 4 JANVIER, 17 MAI).
+- `_` remplacé par une espace, apostrophes typographiques uniformisées.
+- Une fiche marquée « à supprimer » par les agents de collecte retirée.
+- `validate.py` refuse désormais les noms abîmés par l'encodage ou par Excel.
 - Page de démonstration : sélection en cascade province → village, carte des villages du groupement.
 - Fermes : position arrondie à ~1 km et précision GPS retirée (vie privée des propriétaires).
 - Licence des données : CC BY 4.0.

@@ -45,6 +45,10 @@ FKS = [
     ("localites", "village_rattachement_id", "villages", False),
 ]
 
+# Traces d'erreurs d'encodage (« OÃ¿CHA », « â€™ ») ou de conversion Excel (dates)
+import re
+SUSPECT = re.compile(r"Ã|Â[^A-Za-z ]|â€|ƒ|\ufffd|\?|_|\d{4}-\d\d-\d\d|[\x00-\x1f]")
+
 FORBIDDEN = {"username", "agent", "enqueteur", "telephone", "email"}
 
 
@@ -63,6 +67,10 @@ def main() -> int:
         dup = [i for i, n in Counter(r["id"] for r in rows).items() if n > 1]
         if dup:
             errors.append(f"{t}: {len(dup)} identifiants en double (ex. {dup[:5]})")
+        for col in ("nom", "antenne_nom", "village_rattachement_nom"):
+            sus = [f'{r["id"]}: {r[col]}' for r in rows if r.get(col) and SUSPECT.search(r[col])]
+            if sus:
+                errors.append(f"{t}.{col}: {len(sus)} noms abîmés ou suspects (ex. {sus[:5]})")
         missing_name = [r["id"] for r in rows if not r.get("nom")]
         if missing_name:
             errors.append(f"{t}: {len(missing_name)} lignes sans nom (ex. {missing_name[:5]})")
