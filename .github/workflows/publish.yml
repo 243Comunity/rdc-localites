@@ -1,7 +1,9 @@
 name: Publication (release + API statique)
+# Se déclenche quand une release est publiée sur GitHub (Releases → Draft a new release).
+# Les fichiers générés sont ajoutés automatiquement à la release.
 on:
-  push:
-    tags: ["v*"]
+  release:
+    types: [published]
 
 jobs:
   release:
