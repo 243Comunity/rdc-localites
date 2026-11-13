@@ -2,6 +2,12 @@
 
 ## Non publié
 
+- Fermes : position arrondie à ~1 km et précision GPS retirée (vie privée des propriétaires).
+- Licence des données : CC BY 4.0.
+- Contributions : pull requests obligatoires vers `main`, relecture par le mainteneur
+  (`CODEOWNERS`), modèle de pull request.
+- API statique republiée automatiquement à chaque changement sur `main` (dépôt public).
+
 ## 0.1.0 — 2026-11-13
 
 - Import initial depuis le fichier Excel source (voir `docs/rapport_import.md`).

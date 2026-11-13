@@ -1,20 +1,27 @@
 # Licence des données
 
-> **À COMPLÉTER AVANT PUBLICATION.**
-> Indiquer ici l'organisme qui a produit le fichier d'origine, la date de la collecte,
-> et confirmer que sa redistribution publique est autorisée.
+Les fichiers de `data/` et ceux générés dans `dist/` sont publiés sous licence
+**Creative Commons Attribution 4.0 International (CC BY 4.0)**.
 
-Licence proposée pour les fichiers de `data/` et `dist/` : **Creative Commons Attribution 4.0 (CC BY 4.0)**.
-Vous pouvez utiliser, modifier et redistribuer les données, y compris commercialement,
-à condition de citer : « RDC Localités, 243Comunity » et la source d'origine.
+Vous pouvez les utiliser, les modifier et les redistribuer, y compris dans un produit
+commercial, à condition de citer :
+
+> RDC Localités — 243Comunity (https://github.com/243Comunity/rdc-localites)
 
 ## Source
 
-- Producteur : _à compléter_
-- Période de collecte : _à compléter_
-- Fichier d'origine : `Data_Localités_Excel.xlsx` (124 401 lignes)
+Les données proviennent d'un fichier de localités de la RDC disponible publiquement
+(`Data_Localités_Excel.xlsx`, 124 401 lignes), nettoyé et restructuré par 243Comunity.
+Le découpage administratif lui-même (provinces, territoires, secteurs, chefferies…)
+est fixé par les textes officiels de la République Démocratique du Congo.
 
-## Données retirées
+Le nom de l'organisme producteur et la période de collecte seront ajoutés ici dès
+qu'ils seront confirmés.
 
-La source contient les noms des agents de collecte (8 869 noms). Ce sont des données
-personnelles : elles ne sont pas publiées.
+## Ce qui a été retiré ou modifié
+
+- **Noms des agents de collecte** (8 869 personnes) : données personnelles, jamais publiées.
+- **Fermes** : position arrondie à environ 1 km, car une ferme est souvent la propriété
+  d'une famille et porte parfois le nom de son propriétaire.
+
+Le détail des traitements est dans `docs/rapport_import.md`.

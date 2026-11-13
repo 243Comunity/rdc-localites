@@ -162,6 +162,13 @@ def main(xlsx: str) -> None:
         "altitude": lsrc["altitude"].round(1),
         "precision_m": lsrc["precision"].round(3),
     })
+    # Fermes : souvent la propriété d'une famille, parfois nommées d'après le propriétaire.
+    # On publie leur position arrondie à 0,01° (~1 km), sans précision GPS.
+    ferme = localites["categorie"] == "ferme"
+    localites.loc[ferme, ["latitude", "longitude"]] = localites.loc[ferme, ["latitude", "longitude"]].round(2)
+    localites.loc[ferme, "precision_m"] = pd.NA
+    report["fermes_position_arrondie_1km"] = int(ferme.sum())
+
     report["points_sans_nom_ni_code_ignores"] = int(
         (df["village_id"].isna() & df["lieu_habite"].isna()).sum())
 

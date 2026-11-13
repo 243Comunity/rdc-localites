@@ -68,4 +68,4 @@ Lieux habités sans code village dans la source.
 | commune_secteur_chefferie_id | entier | → communes_secteurs_chefferies.id |
 | village_rattachement_nom | texte | Village de rattachement indiqué dans la source |
 | village_rattachement_id | entier | → villages.id, quand le nom correspond à un seul village du même groupement |
-| latitude, longitude, altitude, precision_m | décimal | comme pour les villages |
+| latitude, longitude, altitude, precision_m | décimal | comme pour les villages. **Fermes** : position arrondie à 0,01° (~1 km) et `precision_m` vide, pour protéger la vie privée des propriétaires. |

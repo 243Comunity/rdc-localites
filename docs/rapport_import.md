@@ -9,6 +9,7 @@ Généré par `scripts/import_excel.py`.
 | altitudes aberrantes mises a vide | 78 |
 | villages codes sans nom exclus | 220 |
 | villages avec plusieurs points gps | 3 187 |
+| fermes position arrondie 1km | 9 300 |
 | points sans nom ni code ignores | 12 134 |
 | noms de village en double dans un meme groupement | 10 |
 | villages sans groupement | 0 |

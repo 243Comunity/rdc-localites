@@ -1,4 +1,4 @@
-name: Publication (release + API statique)
+name: Publication des fichiers de la release
 # Se déclenche quand une release est publiée sur GitHub (Releases → Draft a new release).
 # Les fichiers générés sont ajoutés automatiquement à la release.
 on:
@@ -30,22 +30,3 @@ jobs:
             rdc-localites-geojson.zip
             rdc-localites-csv.zip
             rdc-localites.sqlite
-      - uses: actions/upload-pages-artifact@v3
-        if: ${{ !github.event.repository.private }}
-        with: { path: dist }
-
-  # L'API statique n'est déployée que lorsque le dépôt est public
-  # (GitHub Pages n'est pas disponible pour un dépôt privé sur un compte gratuit).
-  pages:
-    needs: release
-    if: ${{ !github.event.repository.private }}
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
-    steps:
-      - id: deploy
-        uses: actions/deploy-pages@v4
