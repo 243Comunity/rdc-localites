@@ -32,7 +32,7 @@ GET /api/v1/groupements-quartiers/{id}.json         → + ses villages et locali
 Chaque réponse contient un `chemin` (province → territoire → secteur) pour afficher une adresse complète. Exemple pour faire une liste déroulante en cascade :
 
 ```js
-const BASE = "https://243comunity.github.io/rdc-localites/api/v1"; // adresse à confirmer
+const BASE = "https://243comunity.github.io/rdc-localites/api/v1";
 const provinces = await fetch(`${BASE}/provinces.json`).then(r => r.json());
 const nordKivu  = await fetch(`${BASE}/provinces/15.json`).then(r => r.json());
 console.log(nordKivu.territoires_villes); // GOMA VILLE, WALIKALE, LUBERO, BENI, RUTSHURU, ...
